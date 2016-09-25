@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Identity by HTML5 UP</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="static/css/main.css" />
+        <link rel="stylesheet" href="static/css/personal.css" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="static/javascript/personal.js"></script>
+        <noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
+    </head>
+    <body class="is-loading">
+
+        <!-- Wrapper -->
+            <div id="wrapper">
+
+                <!-- Main -->
+                    <section id="main">
+                        <header>
+                            <span class="avatar"><img src="static/images/avatar.jpg" alt="" /></span>
+                            <h1></h1>
+                        </header>
+                        <a id="login-button" href="#" class="button">Login</a>
+                        <form id="login-form" method="post" action="#" style="display: none;">
+                            <div class="field">
+                                <input type="email" name="email" id="email" placeholder="Email" />
+                            </div>
+                            <div class="field">
+                                <input autocorrect="off" id="password-field" type="password" name="password" placeholder="Password *" />
+                            </div>
+                            <ul class="actions">
+                                <li><a href="#" class="button">Login</a></li>
+                            </ul>
+                        </form>
+                        
+                        
+                        <hr />
+                        <a id="create-button" href="#" class="button">Create Account</a>
+                        <form id="create-form" method="post" action="#" style="display: none;">
+                            <div class="field">
+                                <input type="text" name="name" id="name" placeholder="Name" />
+                            </div>
+                            <div class="field">
+                                <input type="email" name="email" id="email" placeholder="Email" />
+                            </div>
+                            <div class="field">
+                                <input autocorrect="off" id="password-field" type="password" class="validate[required,minSize[6],maxSize[50]]" name="password" placeholder="Password *" />
+                            </div>
+                            <div class="field">
+                                <input autocorrect="off" id="password-check-field" type="password" class="validate[required,equals[password-field]]" name="cpassword" placeholder="Confirm Password *" />
+                            </div>
+                            <ul class="actions">
+                                <li><a href="#" class="button">Get Started</a></li>
+                            </ul>
+                        </form>
+                        <hr />
+                        
+                    </section>
+
+                <!-- Footer -->
+                    <footer id="footer">
+                        <ul class="copyright">
+                        </ul>
+                    </footer>
+
+            </div>
+
+        <!-- Scripts -->
+            <script>
+                if ('addEventListener' in window) {
+                    window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-loading\b/, ''); });
+                    document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+                }
+            </script>
+
+    </body>
+</html>

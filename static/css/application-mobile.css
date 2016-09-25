@@ -1,0 +1,32 @@
+/*********************
+
+Mobile Overrides
+
+*********************/
+
+#school-other-field {
+	margin-top: .8em;
+}
+
+input#school-other-field {
+	font-size: 1em;
+}
+
+#other-school-text {
+	padding-bottom: .9em;
+	font-size: 1.2em;
+}
+
+#resume-field-text {
+	display: block;
+	padding-bottom: .9em;
+	font-size: 1.2em;
+}
+
+#resume-field {
+	display: none;
+}
+
+#resume-explanation-text {
+	display: none;
+}

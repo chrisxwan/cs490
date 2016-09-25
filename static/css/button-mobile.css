@@ -1,0 +1,31 @@
+/*********************
+
+Mobile Overrides
+
+*********************/
+
+button {
+	font-family: "Montserrat", Helvetica, Arial, sans-serif;
+	text-transform: uppercase;
+	color: #ffffff;
+    background: rgba(39, 174, 96, 0.16);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    font-size: 2.2em;
+    width: 15em;
+    height: 2.4em;
+    -moz-transition: none;
+    -ms-transition: none;
+    -webkit-transition: none;
+    -o-transition: none;
+    transition: none;
+}
+
+button:hover,
+button:focus {
+    background-color: rgba(39, 174, 96, 0.16);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+}
+
+.button:not(:last-child){
+    margin-bottom: 30px;
+}
