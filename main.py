@@ -19,7 +19,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'splash.login'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['YHACK_ADMIN_DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['CS490_DATABASE_URL']
 app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
 
 db = SQLAlchemy(app)

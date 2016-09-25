@@ -22,7 +22,7 @@
                             <h1></h1>
                         </header>
                         <a id="login-button" href="#" class="button">Login</a>
-                        <form id="login-form" method="post" action="#" style="display: none;">
+                        <form id="login-form" method="POST" action="/login" style="display: none;">
                             <div class="field">
                                 <input type="email" name="email" id="email" placeholder="Email" />
                             </div>
@@ -37,10 +37,7 @@
                         
                         <hr />
                         <a id="create-button" href="#" class="button">Create Account</a>
-                        <form id="create-form" method="post" action="#" style="display: none;">
-                            <div class="field">
-                                <input type="text" name="name" id="name" placeholder="Name" />
-                            </div>
+                        <form id="create-form" method="POST" style="display: none;" action="/create">
                             <div class="field">
                                 <input type="email" name="email" id="email" placeholder="Email" />
                             </div>
@@ -50,9 +47,9 @@
                             <div class="field">
                                 <input autocorrect="off" id="password-check-field" type="password" class="validate[required,equals[password-field]]" name="cpassword" placeholder="Confirm Password *" />
                             </div>
-                            <ul class="actions">
-                                <li><a href="#" class="button">Get Started</a></li>
-                            </ul>
+                            <div class="field">
+                                <input autocorrect="off" type="submit" name="submit" class="submit action-button" value="Submit" />
+                            </div>
                         </form>
                         <hr />
                         
