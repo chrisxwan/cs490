@@ -1,5 +1,5 @@
 """
-YHack Admin 2015 app setup
+App setup
 """
 
 

@@ -1,4 +1,4 @@
-# importa all models
+# import all models
 from user.models import *
 
 # recreate the database

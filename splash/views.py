@@ -32,15 +32,27 @@ def file_too_big(e):
 
 @splash.route('/')
 def index():
-    firstLoading = not request.cookies.get('c209a57ae54980562bf78bd802b06b97')
-    return render_template('home.html', firstLoading=firstLoading)
+    return render_template('home.html')
 
 @splash.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static/favicon'), 'favicon-96x96.png', mimetype='image/vnd.microsoft.icon')
 
+@splash.route('/success', methods=['GET'])
+def success():
+    if current_user is not None and current_user.is_authenticated():
+        return render_template('success.html')
+    return redirect(url_for('splash.index'))
+
+@splash.route('/authenticate', methods=['GET', 'POST'])
+@login_required
+def authenticate():
+    if request.method == 'GET':
+        return render_template('success.html')
+
+
 @splash.route('/create', methods=['POST'])
-def apply():
+def create():
     if current_user is not None and current_user.is_authenticated():
         return redirect(url_for('dashboard.index'))
 
@@ -53,7 +65,7 @@ def apply():
 
     if User.query.filter(User.email == request.form['email'].strip().lower()).count() == 1:
         return redirect(url_for('splash.submitted', code="0"))
-    print("here1")
+
     email = request.form['email'].strip().lower()
     if not is_email_address_valid(email):
         return redirect(url_for('splash.submitted', code="3"))
@@ -70,17 +82,15 @@ def apply():
     a.confirmation_code = uid
     db.session.add(a)
     db.session.commit()
-    print("here2")
-    return redirect(url_for('splash.submitted', code="1", email=a.email))
+    login_user(a)
+
+    return redirect(url_for('splash.success', code="1", email=a.email))
 
 
-@splash.route('/login', methods=['GET', 'POST'])
+@splash.route('/login', methods=['POST'])
 def login():
     if current_user is not None and current_user.is_authenticated():
-        return redirect(url_for('dashboard.index'))
-    if request.method == 'GET':
-        email = request.args.get('defaultEmail')
-        return render_template('login.html', email=email)
+        return redirect(url_for('splash.success'))
     email = request.form['email'].lower()
     password = request.form['password']
     user = User.query.filter(Attendee.email == email).first()
@@ -90,8 +100,7 @@ def login():
     if user.verify_password(password) is False:
         flash('That email/password combination does not exist, try again!')
         return redirect(url_for('splash.home', defaultEmail=email))
-    login_user(user)
-    return redirect(url_for('dashboard.index'))
+    return redirect(url_for('splash.authenticate'))
     
 
 @splash.route("/logout", methods=['GET'])
