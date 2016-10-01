@@ -24,11 +24,7 @@ def before_request():
 
 @login_manager.user_loader
 def load_user(id):
-    return Attendee.query.get(int(id))
-
-@app.errorhandler(413)
-def file_too_big(e):
-    return redirect(url_for('splash.index', code="3"))
+    return User.query.get(int(id))
 
 @splash.route('/')
 def index():
@@ -50,13 +46,12 @@ def authenticate():
     if request.method == 'GET':
         return render_template('success.html')
 
+@splash.route('/error', methods=['GET'])
+def error():
+    return render_template('error.html')
 
 @splash.route('/create', methods=['POST'])
 def create():
-    if current_user is not None and current_user.is_authenticated():
-        return redirect(url_for('dashboard.index'))
-
-    # for debugging
     requestDict = request.values
     requestDict = dict(zip(requestDict, map(lambda x: requestDict.get(x), requestDict)))
     del requestDict['password']
@@ -64,22 +59,22 @@ def create():
     print requestDict
 
     if User.query.filter(User.email == request.form['email'].strip().lower()).count() == 1:
-        return redirect(url_for('splash.submitted', code="0"))
+        flash('A user with that email has already created an account')
+        return redirect(url_for('splash.error', code="0"))
 
     email = request.form['email'].strip().lower()
     if not is_email_address_valid(email):
-        return redirect(url_for('splash.submitted', code="3"))
+        flash('Not a valid email address')
+        return redirect(url_for('splash.error', code="3"))
     email = email.encode('utf8')
 
     a = User(email=email)
     password = request.form['password']
     if not is_length_of_password_valid(password) or not password == request.form['cpassword']:
-        return redirect(url_for('splash.submitted', code="3"))
+        flash('Your passwords didn\'t match!')
+        return redirect(url_for('splash.error', code="3"))
     a.hash_password(password)
     uid = uuid.uuid4().hex
-    while (User.query.filter(Attendee.confirmation_code==uid).count() > 0):
-        uid = uuid.uuid4().hex
-    a.confirmation_code = uid
     db.session.add(a)
     db.session.commit()
     login_user(a)
@@ -93,14 +88,15 @@ def login():
         return redirect(url_for('splash.success'))
     email = request.form['email'].lower()
     password = request.form['password']
-    user = User.query.filter(Attendee.email == email).first()
+    user = User.query.filter(User.email == email).first()
     if user is None:
-        flash('No application with that email exists, try again!')
-        return redirect(url_for('splash.home'))
+        flash('No user with that email exists, try again!')
+        return redirect(url_for('splash.error'))
     if user.verify_password(password) is False:
         flash('That email/password combination does not exist, try again!')
-        return redirect(url_for('splash.home', defaultEmail=email))
-    return redirect(url_for('splash.authenticate'))
+        return redirect(url_for('splash.error', defaultEmail=email))
+    login_user(user)
+    return redirect(url_for('splash.success'))
     
 
 @splash.route("/logout", methods=['GET'])
@@ -108,6 +104,6 @@ def login():
 def logout():
     email = current_user.email
     logout_user()
-    return redirect(url_for('splash.login', defaultEmail=email))
+    return redirect(url_for('splash.index', defaultEmail=email))
 
 
