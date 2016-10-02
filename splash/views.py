@@ -63,12 +63,14 @@ def create():
         return redirect(url_for('splash.error', code="0"))
 
     email = request.form['email'].strip().lower()
+    firstname = request.form['first_name']
+    lastname = request.form['last_name']
     if not is_email_address_valid(email):
         flash('Not a valid email address')
         return redirect(url_for('splash.error', code="3"))
     email = email.encode('utf8')
 
-    a = User(email=email)
+    a = User(email=email, firstname=firstname, lastname=lastname)
     password = request.form['password']
     if not is_length_of_password_valid(password) or not password == request.form['cpassword']:
         flash('Your passwords didn\'t match!')

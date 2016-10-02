@@ -7,6 +7,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(80), unique=True, index=True)
     password = db.Column(db.String(30))
+    firstname = db.Column(db.String(80))
+    lastname = db.Column(db.String(80))
 
     def hash_password(self, password):
         self.password = pwd_context.encrypt(password)

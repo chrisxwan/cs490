@@ -17,11 +17,21 @@
 
                 <!-- Main -->
                     <section id="main">
-                        <h1>Hello, {{g.user.firstname}}!</h1>
-                        <br>
-                        <h3>You are logged in!</h3>
+                        <h1>Oops! Something went wrong!</h1>
                         <hr />
-                        <a id="logout-button" href="/logout" class="button">Log Out</a>
+                        {% with messages = get_flashed_messages() %}
+				          {% if messages %}
+				            <div class="sign-up">
+				            <ul class=flashes>
+				            {% for message in messages %}
+				              <li class="error-message">{{ message }}</li>
+				            {% endfor %}
+				            </ul>
+				            </div>
+				            <br />
+				          {% endif %}
+				        {% endwith %}
+                        <a id="home-button" href="/" class="button">Back to Home</a>
                         
                     </section>
 
