@@ -1,3 +1,4 @@
 *.pyc
+splash/__init__.pyc
 user/models.pyc
 splash/views.pyc

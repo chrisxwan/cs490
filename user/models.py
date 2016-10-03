@@ -9,6 +9,8 @@ class User(db.Model):
     password = db.Column(db.String(30))
     firstname = db.Column(db.String(80))
     lastname = db.Column(db.String(80))
+    confirmation_code = db.Column(db.String(50))
+    confirmation_status = db.Column(db.Integer, default=0)
 
     def hash_password(self, password):
         self.password = pwd_context.encrypt(password)

@@ -50,6 +50,27 @@ def authenticate():
 def error():
     return render_template('error.html')
 
+@splash.route('/submitted', methods=['GET'])
+def submitted():
+    status = request.args.get('code')
+    if status == "1":
+        email = request.args.get('email')
+        return render_template('submitted.html', email=email)
+    elif status == "2":
+        confirmation_code = request.args.get('confirmationCode')
+        print confirmation_code
+        matched = User.query.filter(User.confirmation_code==confirmation_code)
+        if matched.count() == 0:
+            return redirect(url_for('splash.index'))
+        attendee = matched.first()
+        if attendee.confirmation_status == 1:
+            return redirect(url_for('splash.index'))
+        attendee.confirmation_status = 1
+        db.session.commit()
+        login_user(attendee)
+        return redirect(url_for('splash.success'))
+    return redirect(url_for('splash.index'))
+
 @splash.route('/create', methods=['POST'])
 def create():
     requestDict = request.values
@@ -77,11 +98,15 @@ def create():
         return redirect(url_for('splash.error', code="3"))
     a.hash_password(password)
     uid = uuid.uuid4().hex
+    while (User.query.filter(User.confirmation_code==uid).count() > 0):
+        uid = uuid.uuid4().hex
+    a.confirmation_code = uid
     db.session.add(a)
     db.session.commit()
+    sendConfirmationEmail(a)
     login_user(a)
 
-    return redirect(url_for('splash.success', code="1", email=a.email))
+    return redirect(url_for('splash.submitted', code="1", email=a.email))
 
 
 @splash.route('/login', methods=['POST'])
@@ -96,7 +121,10 @@ def login():
         return redirect(url_for('splash.error'))
     if user.verify_password(password) is False:
         flash('That email/password combination does not exist, try again!')
-        return redirect(url_for('splash.error', defaultEmail=email))
+        return redirect(url_for('splash.error'))
+    if attendee.confirmation_status == 0:
+        flash('Please confirm your account first.')
+        return redirect(url_for('splash.error'))
     login_user(user)
     return redirect(url_for('splash.success'))
     
