@@ -5,7 +5,7 @@ from user.models import *
 db.drop_all()
 db.create_all()
 
-u = User(email="chrisxwan@gmail.com", firstname="Christopher", lastname="Wan")
+u = User(email="chrisxwan@gmail.com", firstname="Christopher", lastname="Wan", confirmation_status=1)
 u.hash_password('helloworld')
 db.session.add(u)
 db.session.commit()

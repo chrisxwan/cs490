@@ -28,6 +28,8 @@ def load_user(id):
 
 @splash.route('/')
 def index():
+    if current_user is not None and current_user.is_authenticated():
+        return redirect(url_for('splash.success'))
     return render_template('home.html')
 
 @splash.route('/favicon.ico')
@@ -53,6 +55,7 @@ def error():
 @splash.route('/submitted', methods=['GET'])
 def submitted():
     status = request.args.get('code')
+    user = None
     if status == "1":
         email = request.args.get('email')
         return render_template('submitted.html', email=email)
@@ -62,12 +65,12 @@ def submitted():
         matched = User.query.filter(User.confirmation_code==confirmation_code)
         if matched.count() == 0:
             return redirect(url_for('splash.index'))
-        attendee = matched.first()
-        if attendee.confirmation_status == 1:
+        user = matched.first()
+        if user.confirmation_status == 1:
             return redirect(url_for('splash.index'))
-        attendee.confirmation_status = 1
+        user.confirmation_status = 1
         db.session.commit()
-        login_user(attendee)
+        login_user(user)
         return redirect(url_for('splash.success'))
     return redirect(url_for('splash.index'))
 
@@ -122,7 +125,7 @@ def login():
     if user.verify_password(password) is False:
         flash('That email/password combination does not exist, try again!')
         return redirect(url_for('splash.error'))
-    if attendee.confirmation_status == 0:
+    if user.confirmation_status == 0:
         flash('Please confirm your account first.')
         return redirect(url_for('splash.error'))
     login_user(user)
@@ -135,5 +138,25 @@ def logout():
     email = current_user.email
     logout_user()
     return redirect(url_for('splash.index', defaultEmail=email))
+
+@splash.route('/password', methods=['GET', 'POST'])
+@login_required
+def password():
+    if request.method == 'GET':
+        return render_template('password.html')
+    attendee = current_user
+    code = 0
+    password = request.form['opassword']
+    if not attendee.verify_password(password):
+        code = 3
+    password = request.form['password']
+    if not password == request.form['cpassword']:
+        code = 3
+    if not is_length_of_password_valid(password):
+        code = 3
+    if code == 0:
+        attendee.hash_password(password)
+        db.session.commit()
+    return redirect(url_for('splash.index', code=code))
 
 

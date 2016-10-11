@@ -8,6 +8,10 @@ from flask import send_from_directory, Blueprint, send_file
 
 print "Starting webapp!"
 
+# admin pannel
+from admin.views import register_admin
+register_admin(app)
+
 # splash
 from splash.views import splash
 app.register_blueprint(splash)

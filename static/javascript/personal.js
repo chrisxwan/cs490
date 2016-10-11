@@ -2,7 +2,9 @@ var loginButton = 0;
 var createButton = 0;
 
 $(document).ready(function() {
-	console.log("here");
+	$('#password').validationEngine({showOneMessage: true});
+	$('#login-form').validationEngine({showOneMessage: true});
+	$('#create-form').validationEngine({showOneMessage: true});
 
 	$('#login-button').on('click', function() {
 		if (createButton === 1) {
