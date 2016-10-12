@@ -45,7 +45,7 @@
 	background: #ee0101;
 	position:relative;
 	color: #fff;
-	min-width: 120px;
+	min-width: 160px;
 	font-size: 11px;
 	border: 2px solid #ddd;
 	box-shadow: 0 0 6px #000;
@@ -57,6 +57,9 @@
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
 	-o-border-radius: 6px;
+	text-transform: none !important;
+	letter-spacing: 1px;
+	line-height: 15px;
 }
 
 .formError.inline .formErrorContent {
