@@ -62,10 +62,10 @@ def sendPasswordResetEmail(a):
     sg = sendgrid.SendGridClient(os.getenv('CS490_SENDGRID_USERNAME'), os.getenv('CS490_SENDGRID_PASSWORD'))
     message = sendgrid.Mail()
     message.add_to('%s %s <%s>' %(cgi.escape(a.firstname), cgi.escape(a.lastname), cgi.escape(a.email)))
-    message.set_subject('YHack 2016 Password Reset')
+    message.set_subject('CS490 Password Reset')
     message.set_html(buildResetPasswordHTMLEmail(cgi.escape(a.firstname), a.password_reset_token))
     message.set_text(buildResetPasswordTextEmail(cgi.escape(a.firstname), a.password_reset_token))
-    message.set_from('YHack <team@yhack.org>')
+    message.set_from('Christopher Wan <christopher.wan@yale.edu>')
     status,msg = sg.send(message)
     print "Password Reset Email To: %s, Status: %s" %(cgi.escape(a.email), status)
     return status

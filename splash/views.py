@@ -30,7 +30,8 @@ def load_user(id):
 def index():
     if current_user is not None and current_user.is_authenticated():
         return redirect(url_for('splash.success'))
-    return render_template('home.html')
+    email = request.args.get('defaultEmail')
+    return render_template('home.html', email=email)
 
 @splash.route('/favicon.ico')
 def favicon():
@@ -144,10 +145,10 @@ def logout():
 def password():
     if request.method == 'GET':
         return render_template('password.html')
-    attendee = current_user
+    user = current_user
     code = 0
     password = request.form['opassword']
-    if not attendee.verify_password(password):
+    if not user.verify_password(password):
         code = 3
     password = request.form['password']
     if not password == request.form['cpassword']:
@@ -155,8 +156,50 @@ def password():
     if not is_length_of_password_valid(password):
         code = 3
     if code == 0:
-        attendee.hash_password(password)
+        user.hash_password(password)
         db.session.commit()
     return redirect(url_for('splash.index', code=code))
+
+@splash.route('/forgot-password', methods=['POST'])
+def forgotPassword():
+    email = request.form['email'].lower()
+    user = User.query.filter(User.email == email).first()
+    if user is None:
+        return jsonify({'response': 1})
+    uid = uuid.uuid4().hex
+    while (User.query.filter(User.password_reset_token == uid).count() > 0):
+        uid = uuid.uuid4().hex
+    user.password_reset_token = uid
+    status = sendPasswordResetEmail(user)
+    db.session.commit()
+    return jsonify({'response': status})
+
+@splash.route('/reset-password', methods=['GET', 'POST'])
+def resetPassword():
+    if request.method == 'GET':
+        token = request.args.get('token')
+        if token is None:
+            return redirect(url_for('splash.login'))
+        user = User.query.filter(User.password_reset_token == token).first()
+        if not user:
+            return redirect(url_for('splash.login'))
+        return render_template('reset-password.html', token=token)
+    token = request.form['token']
+    if token is None:
+        return render_template('update/password_failure.html', unauthenticated=True)
+    password = request.form['password']
+    cpassword = request.form['cpassword']
+    user = User.query.filter(User.password_reset_token == token).first()
+    if not user:
+        return render_template('update/password_failure.html', unauthenticated=True)
+    if not is_length_of_password_valid(password) or not password == cpassword:
+        return render_template('dashboard/update/password_failure.html', unauthenticated=True)
+    user.hash_password(password)
+    user.password_reset_timestamp = None
+    user.password_reset_token = None
+    db.session.commit()
+    logout_user()
+    login_user(user)
+    return redirect(url_for('splash.home', defaultEmail=user.email))
 
 

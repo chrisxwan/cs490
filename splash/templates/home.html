@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="static/css/main.css" />
         <link rel="stylesheet" href="static/css/personal.css" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="static/javascript/jquery.form.js"></script>
         <script type="text/javascript" src="static/javascript/personal.js"></script>
         <noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
     </head>
@@ -23,7 +24,7 @@
                         </header>
                         <a id="login-button" href="#" class="button">Login</a>
                         <form id="login-form" method="POST" action="/login" style="display: none;">
-                            
+                            <h2 id="login-text">Login</h2>
                             <div class="field">
                                 <input type="email" name="email" id="email" placeholder="Email" />
                             </div>
@@ -31,14 +32,17 @@
                                 <input autocorrect="off" id="password-field" type="password" name="password" placeholder="Password *" />
                             </div>
                             <ul class="actions">
-                                <input autocorrect="off" type="submit" name="submit" class="submit action-button" value="Login" />
+                                <input autocorrect="off" id="login-button-actual" type="submit" name="submit" class="submit action-button" value="Login" />
                             </ul>
+                            <div class="loading-spinner" style="display: none;"></div>
+                            <h3 class="fs-subtitle" id="forgot-password"><a>Forgot Password?</a></h3>
                         </form>
                         
                         
-                        <hr />
+                        <hr id="second-line"/>
                         <a id="create-button" href="#" class="button">Create Account</a>
                         <form id="create-form" method="POST" style="display: none;" action="/create">
+                            <h2 id="create-text">Create Account</h2>
                             <div class="field">
                                 <input type="text" name="first_name" placeholder="First Name" />
                             </div>

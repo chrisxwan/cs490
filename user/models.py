@@ -11,6 +11,7 @@ class User(db.Model):
     lastname = db.Column(db.String(80))
     confirmation_code = db.Column(db.String(50))
     confirmation_status = db.Column(db.Integer, default=0)
+    password_reset_token = db.Column(db.String(50))
 
     def hash_password(self, password):
         self.password = pwd_context.encrypt(password)
