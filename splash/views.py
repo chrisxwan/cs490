@@ -200,6 +200,6 @@ def resetPassword():
     db.session.commit()
     logout_user()
     login_user(user)
-    return redirect(url_for('splash.home', defaultEmail=user.email))
+    return redirect(url_for('splash.index'))
 
 
