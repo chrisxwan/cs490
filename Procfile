@@ -1,1 +1,1 @@
-web: python webstart.py
+web: gunicorn webstart:app
