@@ -44,12 +44,13 @@ def success():
     return redirect(url_for('splash.index'))
 
 @splash.route('/authenticate', methods=['GET', 'POST'])
-@login_required
 def authenticate():
     if request.method == 'GET':
-        print request
-        token = request.args.get('hub_verify_token')
-        return request.args.get('hub_challenge')
+        print "here"
+        token = request.args.get('hub.verify_token')
+        print token
+        print "success"
+        return request.args.get('hub.challenge')
         return render_template('success.html')
 
 @splash.route('/error', methods=['GET'])
