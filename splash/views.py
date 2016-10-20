@@ -56,6 +56,7 @@ def authenticate():
         return request.args.get('hub.challenge')
         return render_template('success.html')
     try:
+        print "here"
         # data = json.loads(request.data)
         # text = data['entry'][0]['messaging'][0]['message']['text'] # Incoming Message Text
         # sender = data['entry'][0]['messaging'][0]['sender']['id'] # Sender ID
