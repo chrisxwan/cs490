@@ -5,7 +5,6 @@ URL routing & initialization for webapp
 from os.path import join
 from main import app
 from flask import send_from_directory, Blueprint, send_file
-from OpenSSL import SSL
 
 print "Starting webapp!"
 
