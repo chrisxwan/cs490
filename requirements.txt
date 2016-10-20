@@ -42,3 +42,4 @@ YURL==0.12
 Flask-Migrate==1.2.0
 titlecase==0.7.1
 pattern==2.6
+psycopg2==2.4.4
