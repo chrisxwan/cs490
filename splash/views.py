@@ -13,6 +13,7 @@ from urlparse import urlparse
 from splash import *
 import cgi
 import os
+import requests
 from datetime import datetime
 
 splash = Blueprint('splash', __name__, template_folder="templates")
