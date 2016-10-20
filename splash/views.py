@@ -47,6 +47,9 @@ def success():
 @login_required
 def authenticate():
     if request.method == 'GET':
+        print request
+        token = request.get.args('hub_verify_token')
+        return request.get.args('hub_challenge')
         return render_template('success.html')
 
 @splash.route('/error', methods=['GET'])
