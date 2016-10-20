@@ -2,10 +2,10 @@
 URL routing & initialization for webapp
 """
 
+import os
 from os.path import join
 from main import app
 from flask import send_from_directory, Blueprint, send_file
-from OpenSSL import SSL
 
 print "Starting webapp!"
 
@@ -24,4 +24,5 @@ def _return_static(blueprint_name, fn='index.html'):
     return send_file('%s/static/%s' % (path, fn)) 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, port=port)

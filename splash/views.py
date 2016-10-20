@@ -12,11 +12,14 @@ import uuid
 from urlparse import urlparse
 from splash import *
 import cgi
+import json
+import traceback
 import os
+import requests
 from datetime import datetime
 
 splash = Blueprint('splash', __name__, template_folder="templates")
-
+access_token = os.environ['CS490_MESSENGER_TOKEN']
 
 @app.before_request
 def before_request():
@@ -44,10 +47,43 @@ def success():
     return redirect(url_for('splash.index'))
 
 @splash.route('/authenticate', methods=['GET', 'POST'])
-@login_required
 def authenticate():
     if request.method == 'GET':
+        print "here"
+        token = request.args.get('hub.verify_token')
+        print token
+        print "success"
+        return request.args.get('hub.challenge')
         return render_template('success.html')
+    try:
+        data = json.loads(request.data)
+        text = data['entry'][0]['messaging'][0]['message']['text'] # Incoming Message Text
+        sender = data['entry'][0]['messaging'][0]['sender']['id'] # Sender ID
+        payload = {'recipient': {'id': sender}, 'message': {'text': "Hello World"}} # We're going to send this back
+        r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
+    except Exception as e:
+        print traceback.format_exc() # something went wrong
+
+# def messaging_events(payload):
+#     data = json.loads(payload)
+#     messaging_events = data["entry"][0]["messaging"]
+#     for event in messaging_events:
+#         if "message" in event and "text" in event["message"]:
+#             yield event["sender"]["id"], event["message"]["text"].encode('unicode_escape')
+#         else:
+#             yield event["sender"]["id"], "I can't echo this"
+
+# def send_message(token, recipient, text):
+#     r = requests.post("https://graph.facebook.com/v2.6/me/messages",
+#         params={"access_token": token},
+#         data=json.dumps({
+#         "recipient": {"id": recipient},
+#         "message": {"text": text.decode('unicode_escape')}
+#         }),
+#         headers={'Content-type': 'application/json'})
+#     if r.status_code != requests.codes.ok:
+#         print r.text
+
 
 @splash.route('/error', methods=['GET'])
 def error():
