@@ -274,12 +274,6 @@ def buildResetPasswordHTMLEmail(firstName, resetToken):
                       <table id="contenttable" width="600" align="center" cellpadding="0" cellspacing="0" border="0" style="background-color:#FFFFFF; margin:0 auto; text-align:center; border:none; width: 100% !important; max-width:600px !important;border-bottom-left-radius:5px;border-bottom-right-radius:5px">
                     <tr>
                         <td width="100%">
-                            <table bgcolor="#FFFFFF" border="0" cellspacing="0" cellpadding="0" width="100%">
-                                <tr>
-                                    <td width="100%" bgcolor="#ffffff" style="text-align:center;"><a href="http://yhack.org"><img src="https://s3-us-west-2.amazonaws.com/yhack-static/header.png" alt="Welcome to YHack 2016!" style="display:inline-block; max-width:100% !important; width:100% !important; height:auto !important; border-top-left-radius:5px; border-top-right-radius:5px;" border="0"></a>
-                                    </td>
-                                </tr>
-                           </table>
                            <table bgcolor="#FFFFFF" border="0" cellspacing="0" cellpadding="25" width="100%">
                                 <tr>
                                     <td width="100%" bgcolor="#ffffff" style="text-align:left;">
@@ -287,33 +281,17 @@ def buildResetPasswordHTMLEmail(firstName, resetToken):
                                             Dear """ + firstName + """,                                  
                                         </p>
                                         <p style="color:#222222; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:19px; margin-top:0; margin-bottom:20px; padding:0; font-weight:normal;">
-                                            You can reset your password <a style="color:#2489B3; font-weight:bold; text-decoration:underline;" href='""" + confirmationURL + """'>here</a>. This link will expire in 24 hours.
+                                            You can reset your password <a style="color:#2489B3; font-weight:bold; text-decoration:underline;" href='""" + confirmationURL + """'>here</a>.
                                         </p>
 
                                          <p style="color:#222222; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:19px; margin-top:0; margin-bottom:20px; padding:0; font-weight:normal;">
                                             If you did not request a change in password, please let us know.
-                                        </p>
-
-                                        <p style="color:#222222; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:19px; margin-top:0; margin-bottom:25px; padding:0; font-weight:normal;">
-                                            Feel free to get in touch with us at <a style="color:#2489B3; font-weight:bold; text-decoration:underline;" href="mailto:team@yhack.org">team@yhack.org</a> with any questions.
-                                        </p>
-
-                                        <p style="color:#222222; font-family:Arial, Helvetica, sans-serif; font-size:15px; line-height:19px; margin-top:0; margin-bottom:20px; padding:0; font-weight:normal;">
-                                            The YHack Team
                                         </p>
                                     </td>
                                 </tr>
                            </table>
                            <table bgcolor="#FFFFFF" border="0" cellspacing="0" width="100%" style="border-bottom-left-radius:5px;border-bottom-right-radius:5px;">
                                 <tr>
-                                    <td width="50%" bgcolor="#ffffff" style="text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding-top:30px;padding-right:25px;padding-bottom:10px;padding-left:25px;">
-                                        <p style="color:#222222; font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:14px; margin-top:15px; margin-bottom:0px; padding:0; font-weight:normal;">
-                                            Questions? Contact us at <a href="mailto:team@yhack.org">team@yhack.org</a>.<br>
-                                        </p>
-                                        <p style="color:#222222; font-family:Arial, Helvetica, sans-serif; font-size:11px; line-height:14px; margin-top:0px; margin-bottom:0px; padding:0; font-weight:normal;">
-                                            Copyright 2016 YHack. All Rights Reserved.<br>
-                                        </p>
-                                    </td>
                                     <td width="50%" bgcolor="#ffffff" style="text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding-bottom:10px;padding-top:30px;">
                                         <a href="http://sendgrid.com/?utm_source=Dev%20Rel%20Unspecified&utm_campaign=Email%20Sponsorship&utm_medium=email" style="margin-left:62px;">
                                           <img src="https://s3.amazonaws.com/static.sendgrid.com/mkt/poweredbysendgrid.png" alt="Email Powered By SendGrid" width="200" height="40" />
