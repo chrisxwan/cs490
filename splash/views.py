@@ -48,8 +48,8 @@ def success():
 def authenticate():
     if request.method == 'GET':
         print request
-        token = request.get.args('hub_verify_token')
-        return request.get.args('hub_challenge')
+        token = request.args.get('hub_verify_token')
+        return request.args.get('hub_challenge')
         return render_template('success.html')
 
 @splash.route('/error', methods=['GET'])
