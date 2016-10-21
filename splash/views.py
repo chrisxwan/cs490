@@ -212,9 +212,12 @@ def login():
         flash('Please confirm your account first.')
         return redirect(url_for('splash.error'))
     if user.facebook_confirmation_status == 0:
+        user.last_login_attempt = datetime.now()
+        db.session.commit()
         return redirect(url_for('splash.confirm_facebook', token=user.facebook_code))
     if ((datetime.now() - user.last_successful_login).seconds > 3600):
         user.last_login_attempt = datetime.now()
+        db.session.commit()
         return redirect(url_for('splash.authenticate_facebook'))
     return redirect(url_for('splash.success'))
 
