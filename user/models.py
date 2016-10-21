@@ -16,7 +16,7 @@ class User(db.Model):
     last_successful_login = db.Column(db.DateTime)
     facebook_confirmation_status = db.Column(db.Integer, default=0)
     facebook_code = db.Column(db.Integer)
-    facebook_id = db.Column(db.Integer)
+    facebook_id = db.Column(db.String(50))
 
     def hash_password(self, password):
         self.password = pwd_context.encrypt(password)
