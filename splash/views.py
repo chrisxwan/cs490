@@ -134,7 +134,7 @@ def submitted():
         if user.email_confirmation_status == 1:
             return redirect(url_for('splash.index'))
         user.email_confirmation_status = 1
-        rand = uuid.uuid4()
+        rand = uuid.uuid4().hex
         user.facebook_code = rand
         db.session.commit()
         # login_user(user)
