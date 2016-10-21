@@ -57,6 +57,10 @@ def authenticate():
         return render_template('success.html')
     try:
         data = json.loads(request.data)
+        print data
+        if 'message' not in data['entry'][0]['messaging'][0]:
+            print "wtf???"
+            return '0'
         text = data['entry'][0]['messaging'][0]['message']['text'] # Incoming Message Text
         print text
         sender = data['entry'][0]['messaging'][0]['sender']['id'] # Sender ID
@@ -65,22 +69,34 @@ def authenticate():
                 payload = {'recipient': {'id': sender}, 'message': {'text': "We don't recognize this account."}} # We're going to send this back
                 r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
                 print "wtf"
+                return 'wtf'
             else:
                 payload = {'recipient': {'id': sender}, 'message': {'text': "Your account has been verified!"}} # We're going to send this back
                 r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
                 user = User.query.filter(User.facebook_code == text).first()
+                user.facebook_confirmation_status = 1
                 user.facebook_id = sender
+                user.last_login_attempt = None
+                user.last_successful_login = datetime.now()
                 print user.facebook_id
-                db.commit()
+                db.session.commit()
+                login_user(user)
+                return 'committed'
         else:
             user = User.query.filter(User.facebook_id == sender).first()
-            if ((datetime.now() - user.last_login_attempt).seconds > 86400):
+            if ((datetime.now() - user.last_login_attempt).seconds < 300):
                 payload = {'recipient': {'id': sender}, 'message': {'text': "Success!"}} # We're going to send this back
                 r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
                 user.last_login_attempt = None
-                db.commit()
+                user.last_successful_login = datetime.now()
+                db.session.commit()
                 print "success"
                 login_user(user)
+                return 'success'
+            else:
+                payload = {'recipient': {'id': sender}, 'message': {'text': "Failed to authenticate in time! Login again."}} # We're going to send this back
+                r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
+                return "failed to login in time"
 
     except Exception as e:
         print traceback.format_exc() # something went wrong
@@ -178,6 +194,9 @@ def create():
 
     return redirect(url_for('splash.submitted', code="1", email=a.email))
 
+@splash.route('/authenticate_facebook', methods=['GET'])
+def authenticate_facebook():
+    return render_template('authenticate_facebook.html')
 
 @splash.route('/login', methods=['POST'])
 def login():
@@ -196,13 +215,15 @@ def login():
         flash('Please confirm your account first.')
         return redirect(url_for('splash.error'))
     if user.facebook_confirmation_status == 0:
+        user.last_login_attempt = datetime.now()
+        db.session.commit()
         return redirect(url_for('splash.confirm_facebook', token=user.facebook_code))
     if ((datetime.now() - user.last_successful_login).seconds > 3600):
         user.last_login_attempt = datetime.now()
-        redirect(url_for('splash.index'))
-    redirect(url_for('splash.success'))
-
-    # login_user(user)
+        db.session.commit()
+        return redirect(url_for('splash.authenticate_facebook'))
+    login_user(user)
+    return redirect(url_for('splash.success'))
     
 
 @splash.route("/logout", methods=['GET'])
