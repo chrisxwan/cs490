@@ -57,6 +57,7 @@ def authenticate():
         return render_template('success.html')
     try:
         data = json.loads(request.data)
+        print data
         text = data['entry'][0]['messaging'][0]['message']['text'] # Incoming Message Text
         print text
         sender = data['entry'][0]['messaging'][0]['sender']['id'] # Sender ID
