@@ -56,13 +56,32 @@ def authenticate():
         return request.args.get('hub.challenge')
         return render_template('success.html')
     try:
-        print "here"
         data = json.loads(request.data)
         text = data['entry'][0]['messaging'][0]['message']['text'] # Incoming Message Text
+        print text
         sender = data['entry'][0]['messaging'][0]['sender']['id'] # Sender ID
-        sender = 'chrisxwan'
-        payload = {'recipient': {'id': sender}, 'message': {'text': "Hello World"}} # We're going to send this back
-        r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
+        if User.query.filter(User.facebook_id == sender).first() is None:
+            if User.query.filter(User.facebook_code == text).first() is None:
+                payload = {'recipient': {'id': sender}, 'message': {'text': "We don't recognize this account."}} # We're going to send this back
+                r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
+                print "wtf"
+            else:
+                payload = {'recipient': {'id': sender}, 'message': {'text': "Your account has been verified!"}} # We're going to send this back
+                r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
+                user = User.query.filter(User.facebook_code == text).first()
+                user.facebook_id = sender
+                print user.facebook_id
+                db.commit()
+        else:
+            user = User.query.filter(User.facebook_id == sender).first()
+            if ((datetime.now() - user.last_login_attempt).seconds > 86400):
+                payload = {'recipient': {'id': sender}, 'message': {'text': "Success!"}} # We're going to send this back
+                r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
+                user.last_login_attempt = None
+                db.commit()
+                print "success"
+                login_user(user)
+
     except Exception as e:
         print traceback.format_exc() # something went wrong
 
@@ -91,6 +110,13 @@ def authenticate():
 def error():
     return render_template('error.html')
 
+@splash.route('/confirm_facebook', methods=['GET'])
+def confirm_facebook():
+    token = request.args.get('token')
+    if current_user is not None and token is not None:
+        return render_template('confirm_facebook.html')
+    return redirect(url_for('splash.index'))
+
 @splash.route('/submitted', methods=['GET'])
 def submitted():
     status = request.args.get('code')
@@ -105,12 +131,14 @@ def submitted():
         if matched.count() == 0:
             return redirect(url_for('splash.index'))
         user = matched.first()
-        if user.confirmation_status == 1:
+        if user.email_confirmation_status == 1:
             return redirect(url_for('splash.index'))
-        user.confirmation_status = 1
+        user.email_confirmation_status = 1
+        rand = uuid.uuid4()
+        user.facebook_code = rand
         db.session.commit()
-        login_user(user)
-        return redirect(url_for('splash.success'))
+        # login_user(user)
+        return redirect(url_for('splash.confirm_facebook', token=rand))
     return redirect(url_for('splash.index'))
 
 @splash.route('/create', methods=['POST'])
@@ -164,11 +192,17 @@ def login():
     if user.verify_password(password) is False:
         flash('That email/password combination does not exist, try again!')
         return redirect(url_for('splash.error'))
-    if user.confirmation_status == 0:
+    if user.email_confirmation_status == 0:
         flash('Please confirm your account first.')
         return redirect(url_for('splash.error'))
-    login_user(user)
-    return redirect(url_for('splash.success'))
+    if user.facebook_confirmation_status == 0:
+        return redirect(url_for('splash.confirm_facebook', token=user.facebook_code))
+    if ((datetime.now() - user.last_successful_login).seconds > 3600):
+        user.last_login_attempt = datetime.now()
+        redirect(url_for('splash.index'))
+    redirect(url_for('splash.success'))
+
+    # login_user(user)
     
 
 @splash.route("/logout", methods=['GET'])

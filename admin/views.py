@@ -33,12 +33,12 @@ class DeleteView(AdminAccess, ModelView):
     can_delete = True
 
 class UserView(DeleteView):
-    column_list = ('id', 'firstname', 'lastname', 'email', 'confirmation_status')
+    column_list = ('id', 'firstname', 'lastname', 'email', 'email_confirmation_status')
     column_searchable_list = ('firstname', 'lastname', 'email')
     column_labels = {'firstname': 'First',
     				'lastname': 'Last',
     				'email': 'Email',
-    				'confirmation_status': 'Confirmation Status',
+    				'email_confirmation_status': 'Confirmation Status',
     				'graduation_year': 'Graduation'}
     form_excluded_columns = ('password')
     form_overrides = dict(status=SelectField)

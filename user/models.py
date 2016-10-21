@@ -10,9 +10,13 @@ class User(db.Model):
     firstname = db.Column(db.String(80))
     lastname = db.Column(db.String(80))
     confirmation_code = db.Column(db.String(50))
-    confirmation_status = db.Column(db.Integer, default=0)
+    email_confirmation_status = db.Column(db.Integer, default=0)
     password_reset_token = db.Column(db.String(50))
     last_login_attempt = db.Column(db.DateTime)
+    last_successful_login = db.Column(db.DateTime)
+    facebook_confirmation_status = db.Column(db.Integer, default=0)
+    facebook_code = db.Column(db.Integer)
+    facebook_id = db.Column(db.Integer)
 
     def hash_password(self, password):
         self.password = pwd_context.encrypt(password)
