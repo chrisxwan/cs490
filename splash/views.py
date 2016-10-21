@@ -219,9 +219,8 @@ def login():
         user.last_login_attempt = datetime.now()
         db.session.commit()
         return redirect(url_for('splash.authenticate_facebook'))
+    login_user(user)
     return redirect(url_for('splash.success'))
-
-    # login_user(user)
     
 
 @splash.route("/logout", methods=['GET'])
