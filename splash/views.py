@@ -76,7 +76,7 @@ def authenticate():
                 user = User.query.filter(User.facebook_code == text).first()
                 user.facebook_id = sender
                 print user.facebook_id
-                db.commit()
+                db.session.commit()
                 return 'committed'
         else:
             user = User.query.filter(User.facebook_id == sender).first()
@@ -84,7 +84,7 @@ def authenticate():
                 payload = {'recipient': {'id': sender}, 'message': {'text': "Success!"}} # We're going to send this back
                 r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
                 user.last_login_attempt = None
-                db.commit()
+                db.session.commit()
                 print "success"
                 login_user(user)
                 return 'success'
