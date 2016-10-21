@@ -3,6 +3,10 @@
 	height: 40px;
 }
 
+#facebook-code {
+  text-decoration: none;
+}
+
 @-webkit-keyframes spin {
   from {
     -webkit-transform: rotate(0);
