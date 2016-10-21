@@ -60,7 +60,7 @@ def authenticate():
         print data
         if 'message' not in data['entry'][0]['messaging'][0]:
             print "wtf???"
-            return 0
+            return '0'
         text = data['entry'][0]['messaging'][0]['message']['text'] # Incoming Message Text
         print text
         sender = data['entry'][0]['messaging'][0]['sender']['id'] # Sender ID
