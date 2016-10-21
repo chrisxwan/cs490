@@ -65,6 +65,7 @@ def authenticate():
                 payload = {'recipient': {'id': sender}, 'message': {'text': "We don't recognize this account."}} # We're going to send this back
                 r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
                 print "wtf"
+                return 'wtf'
             else:
                 payload = {'recipient': {'id': sender}, 'message': {'text': "Your account has been verified!"}} # We're going to send this back
                 r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
@@ -72,6 +73,7 @@ def authenticate():
                 user.facebook_id = sender
                 print user.facebook_id
                 db.commit()
+                return 'committed'
         else:
             user = User.query.filter(User.facebook_id == sender).first()
             if ((datetime.now() - user.last_login_attempt).seconds > 86400):
@@ -81,6 +83,7 @@ def authenticate():
                 db.commit()
                 print "success"
                 login_user(user)
+                return 'success'
 
     except Exception as e:
         print traceback.format_exc() # something went wrong
