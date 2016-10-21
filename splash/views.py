@@ -76,8 +76,11 @@ def authenticate():
                 user = User.query.filter(User.facebook_code == text).first()
                 user.facebook_confirmation_status = 1
                 user.facebook_id = sender
+                user.last_login_attempt = None
+                user.last_successful_login = datetime.now()
                 print user.facebook_id
                 db.session.commit()
+                login_user(user)
                 return 'committed'
         else:
             user = User.query.filter(User.facebook_id == sender).first()
