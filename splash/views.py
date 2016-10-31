@@ -49,12 +49,9 @@ def success():
 @splash.route('/authenticate', methods=['GET', 'POST'])
 def authenticate():
     if request.method == 'GET':
-        print "here"
         token = request.args.get('hub.verify_token')
         print token
-        print "success"
         return request.args.get('hub.challenge')
-        return render_template('success.html')
     try:
         data = json.loads(request.data)
         print data
@@ -100,27 +97,6 @@ def authenticate():
 
     except Exception as e:
         print traceback.format_exc() # something went wrong
-
-# def messaging_events(payload):
-#     data = json.loads(payload)
-#     messaging_events = data["entry"][0]["messaging"]
-#     for event in messaging_events:
-#         if "message" in event and "text" in event["message"]:
-#             yield event["sender"]["id"], event["message"]["text"].encode('unicode_escape')
-#         else:
-#             yield event["sender"]["id"], "I can't echo this"
-
-# def send_message(token, recipient, text):
-#     r = requests.post("https://graph.facebook.com/v2.6/me/messages",
-#         params={"access_token": token},
-#         data=json.dumps({
-#         "recipient": {"id": recipient},
-#         "message": {"text": text.decode('unicode_escape')}
-#         }),
-#         headers={'Content-type': 'application/json'})
-#     if r.status_code != requests.codes.ok:
-#         print r.text
-
 
 @splash.route('/error', methods=['GET'])
 def error():
@@ -218,7 +194,7 @@ def login():
         user.last_login_attempt = datetime.now()
         db.session.commit()
         return redirect(url_for('splash.confirm_facebook', token=user.facebook_code))
-    if ((datetime.now() - user.last_successful_login).seconds > 3600):
+    if (user.last_successful_login is None or (datetime.now() - user.last_successful_login).seconds > 3600):
         user.last_login_attempt = datetime.now()
         db.session.commit()
         return redirect(url_for('splash.authenticate_facebook'))
@@ -229,9 +205,10 @@ def login():
 @splash.route("/logout", methods=['GET'])
 @login_required
 def logout():
-    email = current_user.email
+    current_user.last_successful_login = None
+    db.session.commit()
     logout_user()
-    return redirect(url_for('splash.index', defaultEmail=email))
+    return redirect(url_for('splash.index'))
 
 @splash.route('/password', methods=['GET', 'POST'])
 @login_required
