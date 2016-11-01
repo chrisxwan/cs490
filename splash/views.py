@@ -169,7 +169,7 @@ def create():
 
     return redirect(url_for('splash.submitted', code="1", email=a.email))
 
-@splash.route('/check_db'), methods=['POST'])
+@splash.route('/check_db', methods=['POST'])
 def check_db():
     email = request.args.get('email')
     user = User.query.filter(User.email == email).first()
