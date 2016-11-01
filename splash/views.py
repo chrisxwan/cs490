@@ -174,8 +174,8 @@ def check_db():
     email = request.args.get('email')
     user = User.query.filter(User.email == email).first()
     if user.last_successful_login is not None:
-        return 1
-    return 0
+        return "1"
+    return "0"
 
 @splash.route('/authenticate_facebook', methods=['GET'])
 def authenticate_facebook():
