@@ -66,6 +66,19 @@
                     document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
                 }
             </script>
+            <script>
+              function doPoll(){
+                $.post('http://cs490-project.herokuapp.com/check_db?email=' + {{ email }}, function(data) {
+                    if (data === 1) {
+                      location.href = 'http://cs490-project.herokuapp.com/success'
+                    }
+                    setTimeout(doPoll,500);
+                });
+              }
+              $(document).ready(function() {
+                doPoll();
+              })
+            </script>
 
     </body>
 </html>

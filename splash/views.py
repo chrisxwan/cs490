@@ -33,8 +33,7 @@ def load_user(id):
 def index():
     if current_user is not None and current_user.is_authenticated():
         return redirect(url_for('splash.success'))
-    email = request.args.get('defaultEmail')
-    return render_template('home.html', email=email)
+    return render_template('home.html')
 
 @splash.route('/favicon.ico')
 def favicon():
@@ -170,9 +169,18 @@ def create():
 
     return redirect(url_for('splash.submitted', code="1", email=a.email))
 
+@splash.route('/check_db'), methods=['POST'])
+def check_db():
+    email = request.args.get('email')
+    user = User.query.filter(User.email == email).first()
+    if user.last_successful_login is not None:
+        return 1
+    return 0
+
 @splash.route('/authenticate_facebook', methods=['GET'])
 def authenticate_facebook():
-    return render_template('authenticate_facebook.html')
+    email = request.args.get('email')
+    return render_template('authenticate_facebook.html', email = email)
 
 @splash.route('/login', methods=['POST'])
 def login():
@@ -197,7 +205,7 @@ def login():
     if (user.last_successful_login is None or (datetime.now() - user.last_successful_login).seconds > 3600):
         user.last_login_attempt = datetime.now()
         db.session.commit()
-        return redirect(url_for('splash.authenticate_facebook'))
+        return redirect(url_for('splash.authenticate_facebook', email = user.email))
     login_user(user)
     return redirect(url_for('splash.success'))
     
