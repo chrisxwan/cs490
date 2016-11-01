@@ -68,7 +68,7 @@
             </script>
             <script>
               function doPoll(){
-                $.post('http://cs490-project.herokuapp.com/check_db?email=' + {{ email }}, function(data) {
+                $.post('http://cs490-project.herokuapp.com/check_db?email=' + {{ email|safe }}, function(data) {
                     console.log(data);
                     if (data === 1) {
                       location.href = 'http://cs490-project.herokuapp.com/success';
