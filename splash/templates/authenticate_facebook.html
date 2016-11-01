@@ -4,6 +4,7 @@
         <title>CS490 Project</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta id="my-data" data-name="{{email}}">
         <link rel="stylesheet" href="static/css/main.css" />
         <link rel="stylesheet" href="static/css/personal.css" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -68,7 +69,10 @@
             </script>
             <script>
               function doPoll(){
-                $.post('http://cs490-project.herokuapp.com/check_db?email=' + "{{ email }}", function(data) {
+                console.log('http://cs490-project.herokuapp.com/check_db?email=' + "{{ email }}");
+                var post_html = $("#my-data").data();
+                console.log(post_html);
+                $.post(post_html, function(data) {
                     console.log(data);
                     if (data === 1) {
                       location.href = 'http://cs490-project.herokuapp.com/success';
