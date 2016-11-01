@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="static/css/personal.css" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type="text/javascript" src="static/javascript/personal.js"></script>
+        <script type="text/javascript" src="static/javascript/poll.js"></script>
         <noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
     </head>
     <body class="is-loading">
@@ -66,24 +67,6 @@
                     window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-loading\b/, ''); });
                     document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
                 }
-            </script>
-            <script>
-              function doPoll(){
-                console.log('http://cs490-project.herokuapp.com/check_db?email=' + "{{ email }}");
-                var post_html = 'http://cs490-project.herokuapp.com/check_db?email=' + $("#my-data").attr('data-name');
-                console.log(post_html);
-                $.post(post_html, function(data) {
-                    console.log(data);
-                    if (data === "1") {
-                      location.href = 'http://cs490-project.herokuapp.com/success';
-                    }
-                    setTimeout(doPoll,500);
-                });
-              }
-              $(document).ready(function() {
-                console.log("here");
-                doPoll();
-              })
             </script>
 
     </body>

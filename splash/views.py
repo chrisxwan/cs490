@@ -88,7 +88,7 @@ def authenticate():
                 db.session.commit()
                 print "success"
                 login_user(user)
-                return redirect(url_for('splash.success'))
+                return "success"
             else:
                 payload = {'recipient': {'id': sender}, 'message': {'text': "Failed to authenticate in time! Login again."}} # We're going to send this back
                 r = requests.post('https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=payload) # Lets send it
