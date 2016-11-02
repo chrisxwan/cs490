@@ -42,6 +42,10 @@ def favicon():
 @splash.route('/success', methods=['GET'])
 def success():
     if current_user is not None and current_user.is_authenticated():
+        if current_user.email_confirmation_status != 1:
+            return redirect(url_for('splash.submitted', code = 1, email = current_user.email))
+        elif current_user.facebook_confirmation_status != 1:
+            return redirect(url_for('splash.confirm_facebook', token = current_user.facebook_code, email = current_user.email, ))
         return render_template('success.html')
     return redirect(url_for('splash.index'))
 
@@ -104,8 +108,11 @@ def error():
 @splash.route('/confirm_facebook', methods=['GET'])
 def confirm_facebook():
     token = request.args.get('token')
-    if current_user is not None and token is not None:
-        return render_template('confirm_facebook.html')
+    email = request.args.get('email')
+    if email is not None:
+        user = User.query.filter(User.email == email).first()
+        if user.facebook_code == token:
+            return render_template('confirm_facebook.html', facebook_code = user.facebook_code, email = email)    
     return redirect(url_for('splash.index'))
 
 @splash.route('/submitted', methods=['GET'])
@@ -202,7 +209,7 @@ def login():
     if user.facebook_confirmation_status == 0:
         user.last_login_attempt = datetime.now()
         db.session.commit()
-        return redirect(url_for('splash.confirm_facebook', token=user.facebook_code))
+        return redirect(url_for('splash.confirm_facebook', email = user.email, token=user.facebook_code))
     if (user.last_successful_login is None or (datetime.now() - user.last_successful_login).seconds > 3600):
         user.last_login_attempt = datetime.now()
         db.session.commit()

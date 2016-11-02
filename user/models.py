@@ -24,6 +24,11 @@ class User(db.Model):
     def verify_password(self, password):
         return pwd_context.verify(password, self.password)
 
+    def verify_facebook(self, facebook_code):
+        if self.facebook_code == facebook_code:
+            return True
+        return False
+
     def is_authenticated(self):
         return True
 

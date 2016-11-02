@@ -1,13 +1,14 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Identity by HTML5 UP</title>
+        <title>CS490 Project</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta id="my-data" data-name="{{email}}">
         <link rel="stylesheet" href="static/css/main.css" />
         <link rel="stylesheet" href="static/css/personal.css" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script type="text/javascript" src="static/javascript/personal.js"></script>
+        <script type="text/javascript" src="static/javascript/poll.js"></script>
         <noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
     </head>
     <body class="is-loading">
@@ -40,7 +41,7 @@
                         <h3>To setup Two-Factor Authentication with Facebook Messenger,</h3>
                         <h3>Message us on Facebook with the following code:</h3>
                         <br>
-                        <h3 id="facebook-code">123</h3>
+                        <h3 id="facebook-code" style="text-transform: none;">{{ facebook_code }}</h3>
                         <br>
                         <div class="fb-messengermessageus" 
                           messenger_app_id="646132148891482" 

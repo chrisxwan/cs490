@@ -100,7 +100,7 @@ def getFileSize(obj):
     return 0  #assume small enough
 
 def buildConfirmationHTMLEmail(firstName, confirmationCode):
-    confirmationURL = os.getenv('YHACK_ADMIN_URL') + 'submitted?code=2&confirmationCode=' + confirmationCode
+    confirmationURL = os.getenv('CS490_ADMIN_URL') + 'submitted?code=2&confirmationCode=' + confirmationCode
     msg = """
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -196,7 +196,7 @@ def buildConfirmationHTMLEmail(firstName, confirmationCode):
     return msg
 
 def buildConfirmationTextEmail(firstName, confirmationCode):
-    confirmationURL = os.getenv('YHACK_ADMIN_URL') + 'submitted?code=2&confirmationCode=' + confirmationCode
+    confirmationURL = os.getenv('CS490_ADMIN_URL') + 'submitted?code=2&confirmationCode=' + confirmationCode
     return """
     Dear """ + firstName + """,\n
 
@@ -217,7 +217,7 @@ def buildConfirmationTextEmail(firstName, confirmationCode):
 
 
 def buildResetPasswordHTMLEmail(firstName, resetToken):
-    confirmationURL = os.getenv('YHACK_ADMIN_URL') + 'reset-password?token=' + resetToken
+    confirmationURL = os.getenv('CS490_ADMIN_URL') + 'reset-password?token=' + resetToken
     msg = """
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -312,7 +312,7 @@ def buildResetPasswordHTMLEmail(firstName, resetToken):
     return msg
 
 def buildResetPasswordTextEmail(firstName, resetToken):
-    confirmationURL = os.getenv('YHACK_ADMIN_URL') + 'reset-password?token=' + resetToken
+    confirmationURL = os.getenv('CS490_ADMIN_URL') + 'reset-password?token=' + resetToken
     return """
     Dear """ + firstName + """,\n
 
@@ -328,7 +328,7 @@ def buildResetPasswordTextEmail(firstName, resetToken):
     The YHack Team"""
 
 def buildChangeEmailHTMLEmail(firstName, resetToken):
-    confirmationURL = os.getenv('YHACK_ADMIN_URL') + 'submitted?code=2&confirmationCode=' + resetToken
+    confirmationURL = os.getenv('CS490_ADMIN_URL') + 'submitted?code=2&confirmationCode=' + resetToken
     msg = """
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -445,7 +445,7 @@ def buildChangeEmailHTMLEmail(firstName, resetToken):
     return msg
 
 def buildChangeEmailTextEmail(firstName, resetToken):
-    confirmationURL = os.getenv('YHACK_ADMIN_URL') + 'submitted?code=2&confirmationCode=' + resetToken
+    confirmationURL = os.getenv('CS490_ADMIN_URL') + 'submitted?code=2&confirmationCode=' + resetToken
     return """
     Dear """ + firstName + """,\n
 
