@@ -174,6 +174,7 @@ def check_db():
     email = request.args.get('email')
     user = User.query.filter(User.email == email).first()
     if user.last_successful_login is not None:
+        login_user(user)
         return "1"
     return "0"
 
