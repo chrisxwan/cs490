@@ -23,21 +23,26 @@
                             <span class="avatar"><img src="static/images/avatar.jpg" alt="" /></span>
                             <h1></h1>
                         </header>
-                        <form id="login-form" method="POST" action="/login">
-                            <h2 id="login-text">Login</h2>
-                            <input type="hidden" name="service" value={{ service }}>
-                            <input type="hidden" name="service_email" value={{ service_email }}>
+                        <form method="POST" action="/configure_sso" enctype="multipart/form-data">
+                            <h2 id="login-text">Add Service Provider</h2>
                             <div class="field">
-                                <input type="email" name="email" id="email" placeholder="Email" />
+                                <input type="text" name="name" id="name" placeholder="Name of Service Provider" />
                             </div>
                             <div class="field">
-                                <input autocorrect="off" id="password-field" type="password" name="password" placeholder="Password *" />
+                                <input type="text" name="entrypoint-url" placeholder="Entrypoint URL">
+                            </div>
+                            <div class="field">
+                                <input type="text" name="acs-url" placeholder="ACS URL" style="">
+                            </div>
+                            <div class="field">
+                                <label class="encryption-file-upload">
+                                    <input id="file-name" type="file" name="key">
+                                    <span id="file-selected">Upload encryption key</span>
+                                </label>
                             </div>
                             <ul class="actions">
-                                <input autocorrect="off" id="login-button-actual" type="submit" name="submit" class="submit action-button" value="Login" />
+                                <input autocorrect="off" id="login-button-actual" type="submit" name="submit" class="submit action-button" value="Submit" />
                             </ul>
-                            <div class="loading-spinner" style="display: none;"></div>
-                            <h3 class="fs-subtitle" id="forgot-password"><a>Forgot Password?</a></h3>
                         </form>
                         
                     </section>
@@ -56,6 +61,18 @@
                     window.addEventListener('load', function() { document.body.className = document.body.className.replace(/\bis-loading\b/, ''); });
                     document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
                 }
+            </script>
+            <script>
+                $('#file-name').bind('change', function() { 
+                    console.log("hello");
+                    var fileName = 'Upload encryption key'; 
+                    fileName = $(this).val(); 
+                    fileName = fileName.split(/(\\|\/)/g).pop()
+                    if (fileName === '') {
+                        fileName = 'Upload encryption key';
+                    }
+                    $('#file-selected').html(fileName); 
+                })
             </script>
 
     </body>

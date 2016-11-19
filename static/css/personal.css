@@ -3,6 +3,20 @@
 	height: 40px;
 }
 
+input[type="file"] {
+    display: none;
+}
+
+.encryption-file-upload {
+    width: 100%;
+    border: 1px solid #ff7496;
+    border-radius: 4px;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    text-align: left;
+}
+
 #facebook-code {
   text-decoration: none;
 }

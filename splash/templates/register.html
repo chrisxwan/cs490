@@ -23,23 +23,27 @@
                             <span class="avatar"><img src="static/images/avatar.jpg" alt="" /></span>
                             <h1></h1>
                         </header>
-                        <form id="login-form" method="POST" action="/login">
-                            <h2 id="login-text">Login</h2>
-                            <input type="hidden" name="service" value={{ service }}>
-                            <input type="hidden" name="service_email" value={{ service_email }}>
+                        <form id="create-form" method="POST" action="/create">
+                            <h2 id="create-text">Create Account</h2>
+                            <div class="field">
+                                <input type="text" name="first_name" placeholder="First Name" />
+                            </div>
+                            <div class="field">
+                                <input type="text" name="last_name" placeholder="Last Name" />
+                            </div>
                             <div class="field">
                                 <input type="email" name="email" id="email" placeholder="Email" />
                             </div>
                             <div class="field">
-                                <input autocorrect="off" id="password-field" type="password" name="password" placeholder="Password *" />
+                                <input autocorrect="off" id="password-field" type="password" class="validate[required,minSize[6],maxSize[50]]" name="password" placeholder="Password *" />
                             </div>
-                            <ul class="actions">
-                                <input autocorrect="off" id="login-button-actual" type="submit" name="submit" class="submit action-button" value="Login" />
-                            </ul>
-                            <div class="loading-spinner" style="display: none;"></div>
-                            <h3 class="fs-subtitle" id="forgot-password"><a>Forgot Password?</a></h3>
+                            <div class="field">
+                                <input autocorrect="off" id="password-check-field" type="password" class="validate[required,equals[password-field]]" name="cpassword" placeholder="Confirm Password *" />
+                            </div>
+                            <div class="field">
+                                <input autocorrect="off" type="submit" name="submit" class="submit action-button" value="Submit" />
+                            </div>
                         </form>
-                        
                     </section>
 
                 <!-- Footer -->

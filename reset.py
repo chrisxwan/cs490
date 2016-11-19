@@ -1,5 +1,7 @@
 # import all models
 from user.models import *
+from service.models import *
+from service_user.models import *
 import uuid
 
 # recreate the database

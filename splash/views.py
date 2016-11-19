@@ -4,6 +4,8 @@ from flask_login import login_user, logout_user, current_user, login_required
 from main import app, login_manager
 from functools import wraps
 from user.models import User
+from service.models import Service
+from service_user.models import ServiceUser
 from main import db
 import pdb
 from user import *
@@ -34,6 +36,18 @@ def index():
     if current_user is not None and current_user.is_authenticated():
         return redirect(url_for('splash.success'))
     return render_template('home.html')
+
+@splash.route('/configure_sso', methods=['GET', 'POST'])
+def configure_sso():
+    if request.method == 'GET':
+        return render_template('configure_sso.html')
+    name = request.form.get('name').lower()
+    entrypoint = request.form.get('entrypoint-url').lower()
+    acs = request.form.get('acs-url').lower()
+    s = Service(name=name, entrypoint=entrypoint, acs=acs)
+    db.session.add(s)
+    db.session.commit()
+    return redirect(url_for('splash.index'))
 
 @splash.route('/favicon.ico')
 def favicon():
@@ -109,10 +123,13 @@ def error():
 def confirm_facebook():
     token = request.args.get('token')
     email = request.args.get('email')
+    service_email = request.args.get('service_email')
+    service = request.args.get('service')
+    service_acs = request.args.get('service_acs')
     if email is not None:
         user = User.query.filter(User.email == email).first()
         if user.facebook_code == token:
-            return render_template('confirm_facebook.html', facebook_code = user.facebook_code, email = email)    
+            return render_template('confirm_facebook.html', facebook_code = user.facebook_code, email = email, service=service, service_email=service_email, service_acs=service_acs)
     return redirect(url_for('splash.index'))
 
 @splash.route('/submitted', methods=['GET'])
@@ -135,12 +152,13 @@ def submitted():
         rand = uuid.uuid4().hex
         user.facebook_code = rand
         db.session.commit()
-        # login_user(user)
         return redirect(url_for('splash.confirm_facebook', token=rand))
     return redirect(url_for('splash.index'))
 
-@splash.route('/create', methods=['POST'])
+@splash.route('/create', methods=['GET', 'POST'])
 def create():
+    if request.method == 'GET':
+        return render_template('register.html')
     requestDict = request.values
     requestDict = dict(zip(requestDict, map(lambda x: requestDict.get(x), requestDict)))
     del requestDict['password']
@@ -188,15 +206,28 @@ def check_db():
 @splash.route('/authenticate_facebook', methods=['GET'])
 def authenticate_facebook():
     email = request.args.get('email')
-    return render_template('authenticate_facebook.html', email = email)
+    service_email = request.args.get('service_email')
+    service = request.args.get('service')
+    service_acs = request.args.get('service_acs')
+    return render_template('authenticate_facebook.html', email = email, service=service, service_email = service_email, service_acs=service_acs)
 
-@splash.route('/login', methods=['POST'])
+@splash.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        service = request.args.get('service')
+        service_email = request.args.get('service_email')
+        if service is not None and service_email is not None:
+            s = Service.query.filter(Service.name == service).first()
+            if s is None:
+                return redirect(url_for('splash.index'))
+        return render_template('login.html', service=service, service_email=service_email)
     if current_user is not None and current_user.is_authenticated():
         return redirect(url_for('splash.success'))
     email = request.form['email'].lower()
     password = request.form['password']
     user = User.query.filter(User.email == email).first()
+    service = request.form.get('service').lower()
+    service_email = request.form.get('service_email').lower()
     if user is None:
         flash('No user with that email exists, try again!')
         return redirect(url_for('splash.error'))
@@ -206,14 +237,30 @@ def login():
     if user.email_confirmation_status == 0:
         flash('Please confirm your account first.')
         return redirect(url_for('splash.error'))
+    service_acs=None
+    if service != 'none' and service_email != 'none':
+        s = Service.query.filter(Service.name == service).first()
+        if s is None:
+            flash('Wrong service')
+            return redirect(url_for('splash.error'))
+        service_acs = s.acs
+        su = ServiceUser.query.filter(ServiceUser.service == service).filter(ServiceUser.service_email == service_email).first()
+        if su is None:
+            print "here1"
+            su = ServiceUser(service_email=service_email, service=service, internal_user=email)
+            db.session.add(su)
+            db.session.commit()
+        elif su.internal_user != email:
+            flash('Wrong login')
+            return redirect(url_for('splash.error'))
     if user.facebook_confirmation_status == 0:
         user.last_login_attempt = datetime.now()
         db.session.commit()
-        return redirect(url_for('splash.confirm_facebook', email = user.email, token=user.facebook_code))
+        return redirect(url_for('splash.confirm_facebook', email = user.email, token=user.facebook_code, service=service, service_email=service_email, service_acs=service_acs))
     if (user.last_successful_login is None or (datetime.now() - user.last_successful_login).seconds > 3600):
         user.last_login_attempt = datetime.now()
         db.session.commit()
-        return redirect(url_for('splash.authenticate_facebook', email = user.email))
+        return redirect(url_for('splash.authenticate_facebook', email = user.email, service=service, service_email=service_email, service_acs=service_acs))
     login_user(user)
     return redirect(url_for('splash.success'))
     

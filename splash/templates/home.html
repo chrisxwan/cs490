@@ -4,7 +4,7 @@
         <title>CS490 Project</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="google-site-verification" content="OxAiFwzOgQIXnxeoHLh11rYabdFL_79W_zEXl5KpmJo" />
+        <meta name="google-site-verification" content="eMmwGoa6ryPyFGtvFxotyW93TOcq8NK35Vme6GBYgdo" />
         <link rel="stylesheet" href="static/css/main.css" />
         <link rel="stylesheet" href="static/css/personal.css" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -23,47 +23,9 @@
                             <span class="avatar"><img src="static/images/avatar.jpg" alt="" /></span>
                             <h1></h1>
                         </header>
-                        <a id="login-button" href="#" class="button">Login</a>
-                        <form id="login-form" method="POST" action="/login" style="display: none;">
-                            <h2 id="login-text">Login</h2>
-                            <div class="field">
-                                <input type="email" name="email" id="email" placeholder="Email" />
-                            </div>
-                            <div class="field">
-                                <input autocorrect="off" id="password-field" type="password" name="password" placeholder="Password *" />
-                            </div>
-                            <ul class="actions">
-                                <input autocorrect="off" id="login-button-actual" type="submit" name="submit" class="submit action-button" value="Login" />
-                            </ul>
-                            <div class="loading-spinner" style="display: none;"></div>
-                            <h3 class="fs-subtitle" id="forgot-password"><a>Forgot Password?</a></h3>
-                        </form>
+                        <a id="login-button" href="/login" class="button">Login</a>
                         
-                        
-                        <hr id="second-line"/>
                         <a id="create-button" href="#" class="button">Create Account</a>
-                        <form id="create-form" method="POST" style="display: none;" action="/create">
-                            <h2 id="create-text">Create Account</h2>
-                            <div class="field">
-                                <input type="text" name="first_name" placeholder="First Name" />
-                            </div>
-                            <div class="field">
-                                <input type="text" name="last_name" placeholder="Last Name" />
-                            </div>
-                            <div class="field">
-                                <input type="email" name="email" id="email" placeholder="Email" />
-                            </div>
-                            <div class="field">
-                                <input autocorrect="off" id="password-field" type="password" class="validate[required,minSize[6],maxSize[50]]" name="password" placeholder="Password *" />
-                            </div>
-                            <div class="field">
-                                <input autocorrect="off" id="password-check-field" type="password" class="validate[required,equals[password-field]]" name="cpassword" placeholder="Confirm Password *" />
-                            </div>
-                            <div class="field">
-                                <input autocorrect="off" type="submit" name="submit" class="submit action-button" value="Submit" />
-                            </div>
-                        </form>
-                        <hr />
                         
                     </section>
 
