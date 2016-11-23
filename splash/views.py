@@ -143,7 +143,7 @@ def confirm_facebook():
                 public_key = s.public_key
                 public_key = RSA.importKey(public_key)
                 service_email = public_key.encrypt(str(service_email), 32)
-                service_email = base64.b64encode(service_email[0])
+                service_email = base64.urlsafe_b64encode(service_email[0])
             return render_template('confirm_facebook.html', facebook_code = user.facebook_code, email = email, service_email=service_email, service_acs=service_acs)
     return redirect(url_for('splash.index'))
 
@@ -224,6 +224,13 @@ def authenticate_facebook():
     service_email = request.args.get('service_email')
     service = request.args.get('service')
     service_acs = request.args.get('service_acs')
+    if user.facebook_code == token:
+        if service is not None and service_email is not None and service_acs is not None:
+            s = Service.query.filter(Service.name == service).first()
+            public_key = s.public_key
+            public_key = RSA.importKey(public_key)
+            service_email = public_key.encrypt(str(service_email), 32)
+            service_email = base64.urlsafe_b64encode(service_email[0])
     return render_template('authenticate_facebook.html', email = email, service=service, service_email = service_email, service_acs=service_acs)
 
 @splash.route('/login', methods=['GET', 'POST'])

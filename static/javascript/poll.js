@@ -14,10 +14,6 @@ $(document).ready(function() {
 	function doPoll() {
 		var post_html = 'http://cs490-project.herokuapp.com/check_db?email=' + $("#my-data").attr('data-name');
 		dict = getJsonFromUrl();
-		// console.log(dict);
-		// var hashed_email = $('#encrypted-email').attr('data-name');
-		// var redirect = 'http://' + dict['service_acs'] + "?hashed_email=" + hashed_email;
-		// location.href = redirect;
 		$.post(post_html, function(data) {
 		    if (data === "1") {
 		    	if ('service_acs' in dict) {
