@@ -20,6 +20,7 @@ import os
 import requests
 from datetime import datetime
 from Crypto.PublicKey import RSA
+import base64
 
 
 splash = Blueprint('splash', __name__, template_folder="templates")
@@ -142,6 +143,7 @@ def confirm_facebook():
                 public_key = s.public_key
                 public_key = RSA.importKey(public_key)
                 service_email = public_key.encrypt(str(service_email), 32)
+                service_email = base64.b64encode(service_email[0])
             return render_template('confirm_facebook.html', facebook_code = user.facebook_code, email = email, service_email=service_email, service_acs=service_acs)
     return redirect(url_for('splash.index'))
 
