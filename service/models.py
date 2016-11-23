@@ -6,9 +6,8 @@ class Service(db.Model):
     __tablename__ = 'services'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, index=True)
-    entrypoint = db.Column(db.String(80), unique=True, index=True)
     acs = db.Column(db.String(80), unique=True, index=True)
     public_key = db.Column(db.String(500), unique=True)
 
     def __repr__(self):
-        return '#%d: Name: %s, Entrypoint: %s, ACS: %s' % (self.id, self.name, self.entrypoint, self.acs)
+        return '#%d: Name: %s, ACS: %s' % (self.id, self.name, self.acs)

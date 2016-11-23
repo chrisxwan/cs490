@@ -45,7 +45,6 @@ def configure_sso():
     if request.method == 'GET':
         return render_template('configure_sso.html')
     name = request.form.get('name').lower()
-    entrypoint = request.form.get('entrypoint-url').lower()
     acs = request.form.get('acs-url').lower()
     key = request.files.get('key')
     if key is None:
@@ -56,7 +55,15 @@ def configure_sso():
     s = Service(name=name, entrypoint=entrypoint, acs=acs, public_key=public_key)
     db.session.add(s)
     db.session.commit()
-    return redirect(url_for('splash.index'))
+    return redirect(url_for('splash.configure_sso_success', name=name))
+
+@splash.route('/configure_sso_success/<name>', methods=['GET'])
+def configure_sso_success(name):
+    s = Service.query.filter(Service.name == name).first()
+    if s is None:
+        return redirect(url_for('splash.index'))
+    return render_template('configure_sso_success.html', name=name)
+
 
 @splash.route('/favicon.ico')
 def favicon():
@@ -268,7 +275,6 @@ def login():
         service_acs = s.acs
         su = ServiceUser.query.filter(ServiceUser.service == service).filter(ServiceUser.service_email == service_email).first()
         if su is None:
-            print "here1"
             su = ServiceUser(service_email=service_email, service=service, internal_user=email)
             db.session.add(su)
             db.session.commit()

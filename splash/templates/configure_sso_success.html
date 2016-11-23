@@ -4,13 +4,11 @@
         <title>CS490 Project</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="google-site-verification" content="eMmwGoa6ryPyFGtvFxotyW93TOcq8NK35Vme6GBYgdo" />
-        <link rel="stylesheet" href="static/css/main.css" />
-        <link rel="stylesheet" href="static/css/personal.css" />
+        <link rel="stylesheet" href="../static/css/main.css" />
+        <link rel="stylesheet" href="../static/css/personal.css" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script type="text/javascript" src="static/javascript/jquery.form.js"></script>
-        <script type="text/javascript" src="static/javascript/personal.js"></script>
-        <noscript><link rel="stylesheet" href="static/css/noscript.css" /></noscript>
+        <script type="text/javascript" src="../static/javascript/personal.js"></script>
+        <noscript><link rel="stylesheet" href="../static/css/noscript.css" /></noscript>
     </head>
     <body class="is-loading">
 
@@ -19,15 +17,14 @@
 
                 <!-- Main -->
                     <section id="main">
-                        <header>
-                            <span class="avatar"><img src="static/images/avatar.jpg" alt="" /></span>
-                            <h1></h1>
-                        </header>
-                        <a style="display:block; width: 100%;" id="login-button" href="/login" class="button">Login</a>
-                        
-                        <a id="create-button" style="margin-top: 10px;" href="/create" class="button">Create Account</a>
-
-                        <a id="create-button" href="/configure_sso" class="button">Configure SSO</a>
+                        <h1>Congratulations, {{ name }}!</h1>
+                        <br>
+                        <h3>You have successfully created an SSO endpoint!</h3>
+                        <p>Please configure the login for users on your site to redirect to the following URL:</p>
+                        <br>
+                        <p>http://cs490-project.herokuapp.com/login?service={{ name }}&amp;service_email={username}</p>
+                        <hr />
+                        <a style="margin-top: 10px;" id="logout-button" href="/" class="button">Return home</a>
                         
                     </section>
 
