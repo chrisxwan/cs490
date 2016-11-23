@@ -16,8 +16,9 @@ $(document).ready(function() {
 		dict = getJsonFromUrl();
 		$.post(post_html, function(data) {
 		    if (data === "1") {
-		    	if ('service_email' in dict && 'service_acs' in dict) {
-		    		var redirect = 'http://' + dict['service_acs'] + "?email=" + dict['service_email'];
+		    	if ('service_acs' in dict) {
+		    		var hashed_email = $('#encrypted-email').attr('data-name');
+		    		var redirect = 'http://' + dict['service_acs'] + "?hashed_email=" + hashed_email;
 		    		location.href = redirect;
 		    	} else {
 		      		location.href = 'http://cs490-project.herokuapp.com/success';

@@ -19,6 +19,8 @@ import traceback
 import os
 import requests
 from datetime import datetime
+from Crypto.PublicKey import RSA
+
 
 splash = Blueprint('splash', __name__, template_folder="templates")
 access_token = os.environ['CS490_MESSENGER_TOKEN']
@@ -44,7 +46,13 @@ def configure_sso():
     name = request.form.get('name').lower()
     entrypoint = request.form.get('entrypoint-url').lower()
     acs = request.form.get('acs-url').lower()
-    s = Service(name=name, entrypoint=entrypoint, acs=acs)
+    key = request.files.get('key')
+    if key is None:
+        flash('Please upload RSA key')
+        return redirect(url_for('splash.error'))
+    public_key = RSA.importKey(key.read()).exportKey()
+    print(public_key)
+    s = Service(name=name, entrypoint=entrypoint, acs=acs, public_key=public_key)
     db.session.add(s)
     db.session.commit()
     return redirect(url_for('splash.index'))
@@ -129,7 +137,12 @@ def confirm_facebook():
     if email is not None:
         user = User.query.filter(User.email == email).first()
         if user.facebook_code == token:
-            return render_template('confirm_facebook.html', facebook_code = user.facebook_code, email = email, service=service, service_email=service_email, service_acs=service_acs)
+            if service is not None and service_email is not None and service_acs is not None:
+                s = Service.query.filter(Service.name == service).first()
+                public_key = s.public_key
+                public_key = RSA.importKey(public_key)
+                service_email = public_key.encrypt(str(service_email), 32)
+            return render_template('confirm_facebook.html', facebook_code = user.facebook_code, email = email, service_email=service_email, service_acs=service_acs)
     return redirect(url_for('splash.index'))
 
 @splash.route('/submitted', methods=['GET'])

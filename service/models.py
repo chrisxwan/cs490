@@ -8,6 +8,7 @@ class Service(db.Model):
     name = db.Column(db.String(80), unique=True, index=True)
     entrypoint = db.Column(db.String(80), unique=True, index=True)
     acs = db.Column(db.String(80), unique=True, index=True)
+    public_key = db.Column(db.String(200), unique=True)
 
     def __repr__(self):
         return '#%d: Name: %s, Entrypoint: %s, ACS: %s' % (self.id, self.name, self.entrypoint, self.acs)
