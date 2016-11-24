@@ -1,6 +1,7 @@
 #SQL ADMIN PANNEL
 from main import db, app
 from user.models import *
+from service.models import *
 from flask import render_template, abort
 from flask_admin import Admin, AdminIndexView, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
@@ -12,6 +13,7 @@ import locale
 class AdminAccess(object):
     def is_accessible(self):
         user = current_user
+        return True
         if not user.is_authenticated():
             return abort(404)
         elif user.email in ['christopher.wan@yale.edu', 'chrisxwan@gmail.com']:
@@ -38,12 +40,15 @@ class UserView(DeleteView):
     column_labels = {'firstname': 'First',
     				'lastname': 'Last',
     				'email': 'Email',
-    				'email_confirmation_status': 'Confirmation Status',
-    				'graduation_year': 'Graduation'}
+    				'email_confirmation_status': 'Confirmation Status'}
     form_excluded_columns = ('password')
     form_overrides = dict(status=SelectField)
     column_default_sort = ('id')
 
+class ServiceView(ReadOnlyView):
+    column_list = ('id', 'name', 'acs')
+
 def register_admin(app):
     admin = Admin(app, name='admin', url='/admin', index_view=AdminIndexView(url='/admin'))
     admin.add_view(UserView(User, db.session))
+    admin.add_view(ServiceView(Service, db.session))

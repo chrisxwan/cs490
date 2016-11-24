@@ -52,7 +52,7 @@ def configure_sso():
         return redirect(url_for('splash.error'))
     public_key = RSA.importKey(key.read()).exportKey()
     print(public_key)
-    s = Service(name=name, entrypoint=entrypoint, acs=acs, public_key=public_key)
+    s = Service(name=name, acs=acs, public_key=public_key)
     db.session.add(s)
     db.session.commit()
     return redirect(url_for('splash.configure_sso_success', name=name))
