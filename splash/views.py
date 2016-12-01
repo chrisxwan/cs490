@@ -51,7 +51,9 @@ def configure_sso():
         flash('Please upload RSA key')
         return redirect(url_for('splash.error'))
     public_key = RSA.importKey(key.read()).exportKey()
-    print(public_key)
+    if Service.query.filter(Service.name == name).first() != None:
+        flash('An organization with that name already exists!')
+        return redirect(url_for('splash.error'))
     s = Service(name=name, acs=acs, public_key=public_key)
     db.session.add(s)
     db.session.commit()
