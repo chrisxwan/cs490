@@ -36,7 +36,7 @@ def load_user(id):
 
 @splash.route('/')
 def index():
-    if current_user is not None and current_user.is_authenticated():
+    if current_user is not None and current_user.is_authenticated() and current_user.email_confirmation_status == 1 and current_user.facebook_confirmation_status == 1:
         return redirect(url_for('splash.success'))
     return render_template('home.html')
 
@@ -73,7 +73,7 @@ def favicon():
 def success():
     if current_user is not None and current_user.is_authenticated():
         if current_user.email_confirmation_status != 1 or current_user.facebook_confirmation_status != 1:
-            return redirect(url_for('splash.login'))
+            return redirect(url_for('splash.index'))
         return render_template('success.html')
     return redirect(url_for('splash.index'))
 
