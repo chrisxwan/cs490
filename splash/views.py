@@ -231,14 +231,14 @@ def authenticate_facebook():
     service_email = request.args.get('service_email')
     service = request.args.get('service')
     service_acs = request.args.get('service_acs')
-    if user.facebook_code == token:
-        if service is not None and service_email is not None and service_acs is not None:
-            s = Service.query.filter(Service.name == service).first()
-            public_key = s.public_key
-            public_key = RSA.importKey(public_key)
-            service_email = public_key.encrypt(str(service_email), 32)
-            service_email = base64.urlsafe_b64encode(service_email[0])
-    return render_template('authenticate_facebook.html', email = email, service=service, service_email = service_email, service_acs=service_acs)
+    if service is not None and service_email is not None and service_acs is not None:
+        s = Service.query.filter(Service.name == service).first()
+        public_key = s.public_key
+        public_key = RSA.importKey(public_key)
+        service_email = public_key.encrypt(str(service_email), 32)
+        service_email = base64.urlsafe_b64encode(service_email[0])
+        return render_template('authenticate_facebook.html', email = email, service=service, service_email = service_email, service_acs=service_acs)
+    return render_template('authenticate_facebook.html', email = email)
 
 @splash.route('/login', methods=['GET', 'POST'])
 def login():
@@ -284,11 +284,16 @@ def login():
     if user.facebook_confirmation_status == 0:
         user.last_login_attempt = datetime.now()
         db.session.commit()
-        return redirect(url_for('splash.confirm_facebook', email = user.email, token=user.facebook_code, service=service, service_email=service_email, service_acs=service_acs))
+        if service is None:
+            return redirect(url_for('splash.confirm_facebook', email = user.email, token=user.facebook_code, service=service, service_email=service_email, service_acs=service_acs))
+        return redirect(url_for('splash.confirm_facebook', email = user.email, token=user.facebook_code))
+        
     if (user.last_successful_login is None or (datetime.now() - user.last_successful_login).seconds > 3600):
         user.last_login_attempt = datetime.now()
         db.session.commit()
-        return redirect(url_for('splash.authenticate_facebook', email = user.email, service=service, service_email=service_email, service_acs=service_acs))
+        if service is None:
+            return redirect(url_for('splash.authenticate_facebook', email = user.email, service=service, service_email=service_email, service_acs=service_acs))
+        return redirect(url_for('splash.authenticate_facebook', email = user.email))
     login_user(user)
     return redirect(url_for('splash.success'))
     
