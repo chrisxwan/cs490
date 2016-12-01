@@ -72,10 +72,8 @@ def favicon():
 @splash.route('/success', methods=['GET'])
 def success():
     if current_user is not None and current_user.is_authenticated():
-        if current_user.email_confirmation_status != 1:
-            return redirect(url_for('splash.submitted', code = 1, email = current_user.email))
-        elif current_user.facebook_confirmation_status != 1:
-            return redirect(url_for('splash.confirm_facebook', token = current_user.facebook_code, email = current_user.email, ))
+        if current_user.email_confirmation_status != 1 or current_user.facebook_confirmation_status != 1:
+            return redirect(url_for('splash.index'))
         return render_template('success.html')
     return redirect(url_for('splash.index'))
 
